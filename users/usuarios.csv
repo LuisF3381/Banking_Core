@@ -1,0 +1,3 @@
+idUsuario,idUserModel,nombre,apellidoPaterno,apellidoMaterno,cuentaBancaria1,saldoCuenta1,tipoC1,CCI1,cuentaBancaria2,saldoCuenta2,tipoC2,CCI2
+1,4,Adriana Judith,Rosas,Bejarno,Cuenta Sueldo,1200.00,S,825-2949840,Cuenta de ahorros,2450.00,D,325-7949240
+2,5,Juan Carlos,Tulio,Morales,Cuenta de ahorros,3450.00,S,825-2949840,0,0,0,0
