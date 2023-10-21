@@ -106,3 +106,89 @@ def realizar_deposito(idUsuario: int, CCI: str, monto: float, moneda: str):
     except IndexError:
         raise HTTPException(status_code=404, detail="No se encontró el idUsuario")
 
+
+@app.post('/realizar_retiro/{idUsuario}')
+def realizar_retiro(idUsuario: int, CCI: str, monto: float, moneda: str):
+    try:
+        ruta_csv = "users/usuarios.csv"
+        df = pd.read_csv(ruta_csv)
+        
+        # Tasas de conversión
+        tasa_dolar_a_sol = 3.6  # Cambiar a la tasa de conversión real
+        tasa_sol_a_dolar = 0.27  # Cambiar a la tasa de conversión real
+        
+        # Filtrar las filas del DataFrame correspondientes al idUsuario
+        user_data = df[df['idUsuario'] == idUsuario].iloc[0]
+
+        # Determinar si el CCI corresponde a la cuenta 1 o la cuenta 2
+        if CCI == user_data['CCI1']:
+            cuenta = 'cuentaBancaria1'
+            saldo = 'saldoCuenta1'
+            tipo_moneda = 'tipoC1'
+        elif CCI == user_data['CCI2']:
+            cuenta = 'cuentaBancaria2'
+            saldo = 'saldoCuenta2'
+            tipo_moneda = 'tipoC2'
+        else:
+            return {"error": "CCI no válido"}
+
+        # Verificar el tipo de moneda y aplicar la tasa de conversión si es necesario
+        if moneda == 'D' and user_data[tipo_moneda] == 'S':
+            monto *= tasa_dolar_a_sol
+        elif moneda == 'S' and user_data[tipo_moneda] == 'D':
+            monto *= tasa_sol_a_dolar
+
+        # Verificar si hay saldo suficiente
+        if user_data[saldo] >= monto:
+            # Realizar el retiro
+            df.loc[df['idUsuario'] == idUsuario, saldo] -= monto
+            df.to_csv(ruta_csv, index=False)
+            return {"mensaje": "Retiro exitoso"}
+        else:
+            return {"error": "Saldo insuficiente"}
+
+    except IndexError:
+        raise HTTPException(status_code=404, detail="No se encontró el idUsuario")
+
+
+
+@app.post('/realizar_cobro_comision/{idUsuario}')
+def realizar_cobro_comision(idUsuario: int, CCI: str, comision: float):
+    try:
+        # Leemos el csv con los usuarios
+        ruta_csv = "users/usuarios.csv"
+        df = pd.read_csv(ruta_csv)
+        
+        # Tasas de conversión
+        tasa_sol_a_dolar = 0.25  # Cambiar a la tasa de conversión real
+        
+        # Filtrar las filas del DataFrame correspondientes al idUsuario
+        user_data = df[df['idUsuario'] == idUsuario].iloc[0]
+
+        # Determinar si el CCI corresponde a la cuenta 1 o la cuenta 2
+        if CCI == user_data['CCI1']:
+            cuenta = 'cuentaBancaria1'
+            saldo = 'saldoCuenta1'
+            tipo_moneda = 'tipoC1'
+        elif CCI == user_data['CCI2']:
+            cuenta = 'cuentaBancaria2'
+            saldo = 'saldoCuenta2'
+            tipo_moneda = 'tipoC2'
+        else:
+            return {"error": "CCI no válido"}
+
+        # Verificar el tipo de moneda y aplicar la tasa de conversión si es necesario
+        if user_data[tipo_moneda] == 'D':
+            comision *= tasa_sol_a_dolar
+
+        # Restar la comisión al saldo
+        if user_data[saldo] >= comision:
+            df.loc[df['idUsuario'] == idUsuario, saldo] -= comision
+            df.to_csv(ruta_csv, index=False)
+            return {"mensaje": "Cobro de comisión exitoso"}
+        else:
+            return {"error": "Saldo insuficiente para el cobro de comisión"}
+
+    except IndexError:
+        raise HTTPException(status_code=404, detail="No se encontró el idUsuario")
+    
