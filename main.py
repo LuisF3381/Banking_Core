@@ -26,19 +26,6 @@ def listar_usuarios():
     usuarios = df.to_dict(orient="records")
     return usuarios
 
-@app.get('/obtener_idUserModel/{idUsuario}')
-def obtiene_userModel(idUsuario: int):
-    ruta_csv = "users/usuarios.csv"
-    df = pd.read_csv(ruta_csv)
-    try:
-        # Busca el idUserModel en el DataFrame
-        user_model = df[df['idUsuario'] == idUsuario]['idUserModel'].values[0]
-        # Convierte el valor de user_model a un entero
-        user_model = int(user_model)
-        return {"idUserModel": user_model}
-    except IndexError:
-        return {"error": "No se encontró el idUsuario"}
-
 
 @app.get('/listar_cuentas/{idUsuario}')
 def listar_cuentas(idUsuario: int):

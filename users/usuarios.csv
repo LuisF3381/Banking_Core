@@ -1,3 +1,4 @@
-idUsuario,idUserModel,tarjeta,nombre,apellidoPaterno,apellidoMaterno,cuentaBancaria1,saldoCuenta1,tipoC1,CCI1,cuentaBancaria2,saldoCuenta2,tipoC2,CCI2
-1,4,4353 2151 7565 3558,Adriana Judith,Rosas,Bejarno,Cuenta Sueldo,1287.3,S,825-2949840,Cuenta de ahorros,2400.0,D,325-7949240
-2,5,4353 6278 3510 4552,Juan Carlos,Tulio,Morales,Cuenta de ahorros,3450.0,S,834-7891240,0,0.0,0,0
+idUsuario,tarjeta,nombre,apellidoPaterno,apellidoMaterno,cuentaBancaria1,saldoCuenta1,tipoC1,CCI1,cuentaBancaria2,saldoCuenta2,tipoC2,CCI2
+1,4353 2151 7565 3558,Adriana Judith,Rosas,Bejarno,Cuenta Sueldo,1287.3,S,825-2949840,Cuenta de ahorros,2400.0,D,325-7949240
+2,4353 6278 3510 4552,Juan Carlos,Tulio,Morales,Cuenta de ahorros,3450.0,S,834-7891240,0,0.0,0,0
+3,4353 1034 6210 2345,Fabian Pedro,Fernandez,Chavez,Cuenta de ahorros,6579.0,S,834-7891240,0,0.0,0,0
