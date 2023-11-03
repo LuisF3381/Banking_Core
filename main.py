@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+import csv
 
 import pandas as pd
 
@@ -10,7 +11,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
     allow_credentials=True,
-    allow_methods=["GET"],
+    allow_methods=["GET","POST"],
     allow_headers=["*"],
 )
 
@@ -26,7 +27,29 @@ def listar_usuarios():
     usuarios = df.to_dict(orient="records")
     return usuarios
 
+@app.get('/obtiene-usuario/{id_usuario}')
+def obtener_usuario(id_usuario: int):
+    ruta_csv = "users/usuarios.csv"
+    df = pd.read_csv(ruta_csv)  
+    
+    # Busca el usuario por ID
+    usuario = df[df['idUsuario'] == id_usuario]
 
+    # Si no se encuentra el usuario, devuelve un error HTTP 404
+    if usuario.empty:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    # Obtiene el nombre completo y apellidos
+    nombre_completo = f"{usuario['nombre'].values[0]} {usuario['apellidoPaterno'].values[0]} {usuario['apellidoMaterno'].values[0]}"
+
+    # Devuelve el resultado
+    return {"idUsuario": id_usuario, "nombreCompleto": nombre_completo, "apellidos": {
+        "apellidoPaterno": usuario['apellidoPaterno'].values[0],
+        "apellidoMaterno": usuario['apellidoMaterno'].values[0]
+    }}
+
+
+# Lista todas las cuentas del usuario
 @app.get('/listar_cuentas/{idUsuario}')
 def listar_cuentas(idUsuario: int):
     try:
@@ -54,6 +77,44 @@ def listar_cuentas(idUsuario: int):
     except IndexError:
         return {"error": "No se encontró el idUsuario"}
 
+@app.get("/info-cuenta/")
+async def obtener_informacion_cuenta(cci: str = Query(..., description="CCI de la cuenta")):
+    # Lee el archivo CSV
+    ruta_csv = "users/usuarios.csv"
+    with open(ruta_csv, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            # Busca la cuenta por CCI
+            if row["CCI1"] == cci:
+                return {
+                    "cuentaBancaria": row["cuentaBancaria1"],
+                    "saldoCuenta": row["saldoCuenta1"],
+                    "tipoCuenta": row["tipoC1"],
+                    "CCI": row["CCI1"]
+                }
+            elif row["CCI2"] == cci:
+                return {
+                    "cuentaBancaria": row["cuentaBancaria2"],
+                    "saldoCuenta": row["saldoCuenta2"],
+                    "tipoCuenta": row["tipoC2"],
+                    "CCI": row["CCI2"]
+                }
+        # Si no se encuentra la cuenta, devuelve un error
+        raise HTTPException(status_code=404, detail="Cuenta no encontrada")
+
+
+@app.get("/obtener_tarjeta/{idUsuario}")
+def obtener_tarjeta(idUsuario: int):
+    ruta_csv = "users/usuarios.csv"
+    df = pd.read_csv(ruta_csv)
+    usuario = df[df['idUsuario'] == idUsuario]
+    
+    if usuario.empty:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    tarjeta = usuario['tarjeta'].values[0]
+    
+    return {"idUsuario": idUsuario, "tarjeta": tarjeta}
 
 
 @app.post('/realizar_deposito/{idUsuario}')
