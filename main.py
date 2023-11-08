@@ -239,4 +239,3 @@ def realizar_cobro_comision(idUsuario: int, CCI: str, comision: float):
 
     except IndexError:
         raise HTTPException(status_code=404, detail="No se encontró el idUsuario")
-    
