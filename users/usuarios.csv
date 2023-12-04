@@ -1,3 +1,4 @@
 idUsuario,tarjeta,nombre,apellidoPaterno,apellidoMaterno,cuentaBancaria1,saldoCuenta1,tipoC1,CCI1,cuentaBancaria2,saldoCuenta2,tipoC2,CCI2
-14,5481 3445 7802 5433,Camila Alejandra,Torres,Valdez,Cuenta sueldo,1340.0,S,455-1467892,Cuenta ahorros,2140.0,D,335-0957710
-16,5434 1356 1832 4433,Juana Alejandra,Fernandez,Montoya,Cuenta sueldo,2340.0,S,675-3467892,Cuenta ahorros,1340.0,D,945-0157710
+18,5445 2378 1240 4120,Jose Alfonso,Fernandez,Montoya,Cuenta sueldo,2340.0,S,675-3467892,Cuenta ahorros,1340.0,D,945-0157710
+19,5142 3478 1150 2340,Miryam Lidia,Mayuri,Rodriguez,Cuenta ahorros,3450.0,S,134-3565892,Cuenta ahorros,4340.0,S,345-0157710
+20,5562 3348 2450 5368,Adriana Judith,Rosas,Bejarano,Cuenta ahorros,5450.0,S,134-3565892,Cuenta ahorros,2570.0,D,567-7859013
